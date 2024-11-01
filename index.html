@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Feedback Form</title>
+  <title>November Madness</title>
   <style>
     .formElement {
         padding-bottom: 10px;
@@ -123,12 +123,14 @@
       e.preventDefault();
       
       const Name = document.getElementById('Name').value;
-      const TotalVoteSpread = document.getElementById('TotalVoteSpread').value;
       const Winner = document.getElementById('Winner').value;
+      const TotalVoteSpread = document.getElementById('TotalVoteSpread').value;
+      const ElectoralCollegeSpread= document.getElementById('ElectoralCollegeSpread').value;
+      const PercentageSpread = document.getElementById('PercentageSpread').value;
 
       const { data, error } = await supabase
         .from('Responses')
-        .insert([{ Name, TotalVoteSpread }]);
+        .insert([{ Name, TotalVoteSpread, Winner, ElectoralCollegeSpread, PercentageSpread }]);
 
       if (error) {
         debugger;
@@ -136,7 +138,7 @@
         console.log(error)
         message.style.color = 'red';
       } else {
-        message.textContent = 'Thank you! Your feedback was saved.';
+        message.textContent = 'Thank you! Your predictions were saved.';
         message.style.color = 'green';
         form.reset();
       }
