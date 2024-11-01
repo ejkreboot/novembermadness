@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Feedback Form</title>
+  <style>
+    .formElement {
+        padding-bottom: 10px;
+    }
+    .caption {
+        font-size: 12px;
+        color: orange;
+        padding-bottom: 20px;
+        padding-left: 5px;
+    }
+    .small {
+        width: 50px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .container {
+      margin-top: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 600px;
+      text-align: left;
+    }
+    h2 {
+      color: #333;
+    }
+    input {
+      width: 175px;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }    
+    select {
+      width: 200px;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .message {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>November Madness</h2>
+    <form id="responseForm">
+      <div class="formElement">
+        Your Name:<br>
+        <input type="text" id="Name" placeholder="Alan Alda" required>  
+      </div>
+      <div class="formElement">
+        <b>Election Winner:</b><br>
+      <select id="Winner" required>
+        <option value="">Select A Candidate</option>
+        <option value="Donald Trump">Donald Trump</option>
+        <option value="Kamala Harris">Kamala Harris</option>
+      </select> 
+      <div class="caption">5 points for correct choice.</div>
+    </div>
+    <div>
+      <b>Popular Vote Spread</b> (number of votes separating top two candidates, in millions):<br>
+      <input class="small" type="text" id="TotalVoteSpread" placeholder="5" required> Million
+      <div class="caption">5 points max, -1 for each million off</div>
+    </div>
+    <div class="formElement">
+        <b>Percentage Spread</b> (percentage points separating top two candidates):<br>
+      <input class="small" type="text" id="PercentageSpread" placeholder="5" required> %
+      <div class="caption">5 points max, -1 for each percentage point off</div>
+    </div>
+    <div class="formElement">
+        <b>Electoral College Spread</b> (votes separating the candidates):<br>
+      <input class="small" type="text" id="ElectoralCollegeSpread" placeholder="24" required>
+      <div class="caption">5 points max, -1 for each 10 votes off</div>
+    </div>
+    <div class="formElement">
+        <button type="submit">Submit</button>
+      <p id="message" class="message"></p>
+    </form>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const SUPABASE_URL = 'https://onsdhkxybymminymmvtk.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9uc2Roa3h5YnltbWlueW1tdnRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MTkyMTQsImV4cCI6MjA0NTk5NTIxNH0.zVUDeb7asZXmTL3aYdAdi30utlJLWkxEpHRfNCum7wI';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('responseForm');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const Name = document.getElementById('Name').value;
+      const TotalVoteSpread = document.getElementById('TotalVoteSpread').value;
+      const Winner = document.getElementById('Winner').value;
+
+      const { data, error } = await supabase
+        .from('Responses')
+        .insert([{ Name, TotalVoteSpread }]);
+
+      if (error) {
+        debugger;
+        message.textContent = 'Error saving your feedback. Please try again.' + error
+        console.log(error)
+        message.style.color = 'red';
+      } else {
+        message.textContent = 'Thank you! Your feedback was saved.';
+        message.style.color = 'green';
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
