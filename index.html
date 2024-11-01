@@ -16,6 +16,7 @@
     }
     .small {
         width: 50px;
+        text-align: right;
     }
     body {
       font-family: Arial, sans-serif;
@@ -100,7 +101,7 @@
     </div>
     <div class="formElement">
         <b>Electoral College Spread</b> (votes separating the candidates):<br>
-      <input class="small" type="text" id="ElectoralCollegeSpread" placeholder="24" required>
+      <input class="small" type="text" id="ElectoralCollegeSpread" placeholder="24" required> Votes
       <div class="caption">5 points max, -1 for each 10 votes off</div>
     </div>
     <div class="formElement">
@@ -127,6 +128,25 @@
       const TotalVoteSpread = document.getElementById('TotalVoteSpread').value;
       const ElectoralCollegeSpread= document.getElementById('ElectoralCollegeSpread').value;
       const PercentageSpread = document.getElementById('PercentageSpread').value;
+
+      if (!Number.isInteger(Number(TotalVoteSpread))) {
+        message.textContent = 'Please enter a valid integer for Popular Vote Spread.';
+        message.style.color = 'red';
+        return;
+      }
+
+      if (!Number.isInteger(Number(ElectoralCollegeSpread))) {
+        message.textContent += 'Please enter a valid integer for Electoral College Spread.';
+        message.style.color = 'red';
+        return;
+      }
+
+      if (!Number.isInteger(Number(PercentageSpread))) {
+        message.textContent = 'Please enter a valid integer for Percentage Spread.';
+        message.style.color = 'red';
+        return;
+      }
+
 
       const { data, error } = await supabase
         .from('Responses')
